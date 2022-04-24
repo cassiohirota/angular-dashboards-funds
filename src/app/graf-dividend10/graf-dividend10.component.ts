@@ -13,6 +13,8 @@ export class GrafDividend10Component implements OnInit, OnChanges  {
   @Input() dividendosGrafico: Array<DividendDTO> = [];
   graf: any ;
 
+  graf2: any ;
+
   constructor() { }
   ngOnChanges(changes: SimpleChanges): void {
     if(this.graf != null){
@@ -91,11 +93,60 @@ export class GrafDividend10Component implements OnInit, OnChanges  {
         }
       },
     };
+
+    const DATA_COUNT2 = 7;
+    const NUMBER_CFG2 = {count: DATA_COUNT, min: 0, max: 100};
+
+    const labels = months({count: 7});
+    const dataB = {
+  labels: labels,
+  datasets: [
+    {
+      label: 'Dataset 1',
+      data: [1, 3, 74, 101],
+      borderColor: CHART_COLORS.red,
+      backgroundColor: transparentize(CHART_COLORS.red, 0.5),
+      stack: 'combined',
+      type: 'bar'
+    },
+    {
+      label: 'Dataset 2',
+      data: [2, 43, 55, 310],
+      borderColor: CHART_COLORS.blue,
+      backgroundColor: transparentize(CHART_COLORS.blue, 0.5),
+      stack: 'combined'
+    }
+  ]
+};
+    const config2: ChartConfiguration = {
+      type: 'line',
+      data: dataB,
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Chart.js Stacked Line/Bar Chart'
+          }
+        },
+        scales: {
+          y: {
+            stacked: true
+          }
+        }
+      },
+    };
+
+    
+
     const chartItem: ChartItem = document.getElementById('my-chart') as ChartItem
+    const chartItem2: ChartItem = document.getElementById('my-chart2') as ChartItem
 
     this.graf = new Chart(chartItem, config)
+    this.graf2 = new Chart(chartItem2, config2)
+
     
   }
 
+  
 
 }
