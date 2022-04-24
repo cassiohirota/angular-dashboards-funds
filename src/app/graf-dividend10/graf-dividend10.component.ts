@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Chart, ChartConfiguration, ChartItem, registerables } from 'chart.js';
 import { DividendDTO } from '../models/dividendDTO';
+import { CHART_COLORS, months, numbers, transparentize } from '../Util/util';
 
 @Component({
   selector: 'app-graf-dividend10',
@@ -34,15 +35,6 @@ export class GrafDividend10Component implements OnInit, OnChanges  {
   createChart(): void {
     Chart.register(...registerables);
 
-    const data = {
-      labels: ['January','February','March','April','May','6','7','8','9','10','11','12'],
-      datasets: [{
-        label: 'My First dataset',
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: this.dividendosGrafico.map(e=>e.dividendoMesAtual),
-      }]
-    };
   
     const options = {
       scales: {
@@ -53,14 +45,54 @@ export class GrafDividend10Component implements OnInit, OnChanges  {
       }
     }
   
-    const config: ChartConfiguration = {
+    const DATA_COUNT = 12;
+    const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
+    const data = {
+      labels: this.dividendosGrafico.map(e=>e.mesAtual),
+      datasets: [
+        {
+          label: 'Quantidade mes atual',
+          data: this.dividendosGrafico.map(e=>e.quantMesAtual),
+          fill: false,
+          borderColor: CHART_COLORS.red,
+          backgroundColor: transparentize(CHART_COLORS.red, 0.5),
+        },
+        {
+          label: 'Dividendo mes atual',
+          data: this.dividendosGrafico.map(e=>e.dividendoMesAtual),
+          fill: false,
+          borderColor: CHART_COLORS.blue,
+          backgroundColor: transparentize(CHART_COLORS.blue, 0.5),
+        }
+      ]
+    };
+    const config: ChartConfiguration   ={
       type: 'line',
       data: data,
-      options: options
-    }
-  
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Dividendos'
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+              callback: function(val: any, index) {
+                // Hide every 2nd tick label
+                return index % 2 === 0 ? this.getLabelForValue(val) : '';
+              },
+              color: 'red',
+            }
+          }
+        }
+      },
+    };
     const chartItem: ChartItem = document.getElementById('my-chart') as ChartItem
-  
+
     this.graf = new Chart(chartItem, config)
     
   }

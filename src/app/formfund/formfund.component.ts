@@ -21,7 +21,7 @@ export class FormfundComponent implements OnInit, OnChanges {
   
   apresentaValor(){
     this.fundService.periodoEmAnos = this.digitado;
-    this.fundService.getDividendData().subscribe((dividendo)=> this.dividendos =dividendo);   
+    this.fundService.getDividendData().subscribe((e)=> this.dividendos =e);   
   }
 
   constructor(private fundService: FundDividendService) { }
